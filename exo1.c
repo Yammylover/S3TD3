@@ -90,7 +90,7 @@ int main(){
 	printf("Enter size of list:\n");
 	scanf("%d",&a);
 	chain=phanuel(carey);
-	for(int i=1; i<=a;i++){
+	for(int i=1; i<a;i++){
 		carey*=2;
 		end_add(chain,carey);
 	}
