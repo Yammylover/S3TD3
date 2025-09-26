@@ -43,13 +43,13 @@ Node* end_add(Node* pliste, int a){
 }
 
 void rotting(Node* pliste){	//fonction qui efface les pointeurs d'une chaîne
-	Node* p1=malloc(sizeof(Node));
-	p1=pliste;
+	Node* p1=pliste;
 	do{
+			pliste=pliste->pNext;
+			printf("space for %d is being freed\n",p1->value);
 			free(p1);
-			printf("space for %d has been freed\n",p1->value);
-			p1= p1->pNext;	//pointer becomes pointer to next node
-	}while(p1->pNext != NULL);
+			p1= pliste;	//pointer becomes pointer to next node
+	}while(p1 != NULL);
 }
 
 void truth(Node* pliste){
@@ -85,14 +85,13 @@ int main(){
 	truth(chain);
 	free(chain);*/
 	Node* chain=NULL;
-	int a=0, carey=2;
+	int a=0, carey=1;
 	char l='O';
 	printf("Enter size of list:\n");
 	scanf("%d",&a);
-	chain=phanuel(carey);
-	for(int i=1; i<a;i++){
+	for(int i=0; i<a;i++){
 		carey*=2;
-		end_add(chain,carey);
+		chain=end_add(chain,carey);
 	}
 	truth(chain);
 	while(l!='N'){
@@ -105,7 +104,7 @@ int main(){
 		}while(l!='Y' && l!='N');
 			if(l=='Y'){
 				carey*=2;
-				end_add(chain,carey);
+				chain=end_add(chain,carey);
 				truth(chain);
 			}
 		}
