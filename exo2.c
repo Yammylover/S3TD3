@@ -1,76 +1,183 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 
-typedef struct struct_node{
+typedef struct struct_arbre{
+	struct struct_arbre* fg;
+	struct struct_arbre* fd;
 	int value;
-	struct struct_node* pNext;	
+} Arbre;
+
+typedef Arbre* pArbre;
+
+typedef struct struct_node{
+	struct struct_node* pNext;
+	pArbre value;
 } Node;
 
-Node* phanuel(int a){
-	Node* pNew;
-	pNew=malloc(sizeof(Node));
+typedef struct struct_lane{
+	Node* pHead;
+	int tail;
+} Lane;
+
+pArbre creerArbre(int a){
+	pArbre pNew=malloc(sizeof(Arbre));
 	if(pNew==NULL){
-		printf("Pas de mémoire dispo");
-		exit(3);
+		printf("error 31\n");
+		exit(31);
 	}
 	pNew->value=a;
-	pNew->pNext=NULL;
+	pNew->fg=NULL;
+	pNew->fd=NULL;
 	return pNew;
 }
 
-
-Node* add(Node* pliste, int a){
-	//if list empty
-	if(pliste==NULL){
-		return phanuel(a);
-	} else {
-	//search for first higher node
-		Node* p1=pliste;
-		Node* pNew=phanuel(a);
-	//case for first node higher
-		if(p1->value>a){
-			pliste=p1;
-			p1->pNext
-		while(p1->pNext != NULL && p1->pNext->value<a){	//if next term doesn't exist or value stored on the next one is higher, then stop
-			p1=p1->pNext;
-		}
-		pNew->pNext=p1->pNext;	//pNew pointe vers le suivant plus grand que lui
-		p1->pNext=pNew;		//p1 pointe vers pNew
-		return pliste;
+int nothing(pArbre pA){	//arbre vide?
+	if(pA==NULL){
+		return 1;
 	}
-}
-
-void truth(Node* pliste){
-	//printf("checkpoint2\n");
-	if(pliste==NULL){
-		printf("no list \n");
-		exit(62);
-	}
-	Node* temp=pliste;
-	while(temp!=NULL){
-		printf("%d",temp->value);
-		temp=temp->pNext;
-		if(temp!=NULL){
-			printf("->");
-		}
-	}
-	printf("\n");
-}
-
-
-int main(){
-	Node* chain=NULL;
-	int a,s;
-	printf("Entrez la taille de la liste:\n");
-	scanf("%d",&s);
-	for(int i=0;i<s;i++){
-		printf("Rentrez un nombre. Il sera ajouté à la liste\n");
-		scanf("%d",&a);
-		chain=add(chain,a);
-		truth(chain);
-	}
-	truth(chain);
 	return 0;
 }
-	
-	
+
+int isma(pArbre pA){	//feuille?
+	if(nothing(pA)==1){
+		printf("erreur 67\n");
+		exit(67);
+	}
+	if(nothing(pA->fg)==1 && nothing(pA->fd)==1){
+		return 1;
+	}
+	return 0;
+}
+
+int silkextract(pArbre pA){
+	if(nothing(pA)==1){
+		printf("erreur 65\n");
+		exit(65);
+	}
+	return pA->value;
+}
+
+void weave(pArbre pA){
+	if(nothing(pA)==1){
+		printf("erreur 64\n");
+		exit(64);
+	}
+	int a=silkextract(pA);
+	printf("%d\n",a);
+}
+
+int leftson(pArbre pA){		//return 1 si fg existe
+	if(nothing(pA->fg)==0){
+		return 1;
+	}
+	return 0;
+}
+
+int rightson(pArbre pA){	//return 1 si fd existe
+	if(nothing(pA->fd)==0){
+		return 1;
+	}
+	return 0;
+}
+
+void rightegg(pArbre pA, int v){
+	if(nothing(pA)==1 && rightson(pA)==1){	//echoue si l'arbre n'existe pas ou que le fils existe
+		printf("Erreur 98\n");
+		exit(98);
+	} else { 
+		pA->fd=creerArbre(v);
+	}
+}
+
+void leftegg(pArbre pA, int v){
+	if(nothing(pA)==1 && leftson(pA)==1){	//echoue si l'arbre n'existe pas ou que le fils existe
+		printf("Erreur 99\n");
+		exit(99);
+	} else { 
+		pA->fg=creerArbre(v);
+	}
+}
+
+void dreamnail(pArbre pA){	//parcours préfixe
+	if(nothing(pA)==1){
+		printf("Erreur 76");
+		exit(76);
+	}
+	weave(pA);
+	if(leftson(pA)==1){
+		dreamnail(pA->fg);
+	}
+	if(rightson(pA)==1){
+		dreamnail(pA->fd);
+	}
+}
+
+void nighttorch(pArbre pA){	//parcours postfixe
+	if(nothing(pA)==1){
+		printf("Erreur 55");
+		exit(55);
+	}
+	if(leftson(pA)==1){
+		nighttorch(pA->fg);
+	}
+	if(rightson(pA)==1){
+		nighttorch(pA->fd);
+	}
+	weave(pA);
+}
+
+Node* Radiance(pArbre j){
+	Node* pNew=malloc(sizeof(Node));
+	if(pNew==NULL){
+		printf("Erreur 45\n");
+		exit(45);
+	}
+	return pNew;
+}
+
+void inlane(Lane* plane,pArbre pA){
+	if(plane==NULL || pA==NULL){
+		printf("34\n");
+		exit(34);
+	}
+	Node* ptemp;
+	ptemp=(plane->pHead);
+	int n=plane->tail;
+	int i=0;
+	while(i<(plane->tail) && ptemp->pNext!=NULL){
+		ptemp=ptemp->pNext;
+		i++;
+	}
+	//recaliber tail à i en cas d'erreur?
+	plane->tail++;
+	ptemp->pNext=Radiance(pA);
+}
+
+pArbre outlane(Lane* plane){
+	if(plane==NULL){
+		printf("33\n");
+		exit(33);
+	}
+	Node* temp=plane->pHead;
+	pArbre re=temp->value;
+	plane->pHead=plane->pHead->pNext;
+	free(temp);
+	return re;
+}
+
+int main(){
+	pArbre a=creerArbre(1);
+	leftegg(a,2);
+	leftegg(a->fg,3);
+	leftegg(a->fg->fg,4);
+	rightegg(a->fg->fg,5);
+	rightegg(a->fg,6);
+	rightegg(a->fg->fd,7);
+	rightegg(a,8);
+	leftegg(a->fd,9);
+	rightegg(a->fd,10);
+	dreamnail(a);
+	nighttorch(a);
+return 0;
+}
